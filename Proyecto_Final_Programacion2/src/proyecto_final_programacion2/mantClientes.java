@@ -72,9 +72,9 @@ public class mantClientes extends javax.swing.JFrame {
         btnGuardar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         cbMoneda = new javax.swing.JComboBox<>();
-        cbNCF = new javax.swing.JComboBox<>();
         cbCondicion = new javax.swing.JComboBox<>();
         sta = new javax.swing.JRadioButton();
+        cbNCF = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mantenimiento de Clientes");
@@ -178,12 +178,12 @@ public class mantClientes extends javax.swing.JFrame {
         cbMoneda.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         cbMoneda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Peso dominicano", "Dolar", "Euro", "Libra esterlina", "Rublo", "Lira turca", "Peso mexicano", "Yen" }));
 
-        cbNCF.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-
         cbCondicion.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         cbCondicion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Al contado", "Credito", " " }));
 
         sta.setText("Estado");
+
+        cbNCF.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Consumidor final" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -248,14 +248,14 @@ public class mantClientes extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtNombre)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtTelefono, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtEmail, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(cbCondicion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(cbNCF, javax.swing.GroupLayout.Alignment.LEADING, 0, 538, Short.MAX_VALUE)
-                                            .addComponent(txtCedula, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(txtDireccion, javax.swing.GroupLayout.PREFERRED_SIZE, 538, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtEmail, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                                            .addComponent(cbCondicion, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtDireccion, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                                            .addComponent(cbNCF, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(sta)
                         .addGap(110, 110, 110))))
@@ -378,7 +378,7 @@ public class mantClientes extends javax.swing.JFrame {
 
         conectar bd = new conectar();
         Connection cn = bd.conexion();
-        String codcli, cedcli, nomcli, telcli, celcli, dircli, emacli, notcli, tipocf, codcon, codmon, codempven;
+        String codcli, cedcli, nomcli, telcli, celcli, dircli, emacli, notcli, tipocf = "cf", codcon = "cont", codmon = "dop", codempven;
         boolean estado;
         String sql = "";
 
@@ -390,15 +390,31 @@ public class mantClientes extends javax.swing.JFrame {
         dircli = txtDireccion.getText();
         emacli = txtEmail.getText();
         notcli = txtNota.getText();
-        tipocf = (String) cbNCF.getSelectedItem();
-        codcon = (String) cbCondicion.getSelectedItem();
-        codmon = (String) cbMoneda.getSelectedItem();
+        //tipocf = (String) cbNCF.getSelectedItem();
+        //codcon = (String) cbCondicion.getSelectedItem();
+        //codmon = (String) cbMoneda.getSelectedItem();
         codempven = txtVendedor.getText();
         
+        if (cbNCF.getSelectedIndex()==0){
+            tipocf = "cf";
+        }
+        
+        
+        if (cbCondicion.getSelectedIndex()== 0){
+            codcon = "cont";
+        }else if (cbCondicion.getSelectedIndex()== 1){
+            codcon = "cre";
+        }
+        
+        if (cbMoneda.getSelectedIndex() == 0){
+            codmon = "dop";
+        }
+        
         if (sta.isSelected() == true){
-            System.out.print("B'1'");
+            estado = true;
         } else{
             System.out.print("B'0'");
+            estado = false;
         }
         
         
@@ -437,14 +453,14 @@ public class mantClientes extends javax.swing.JFrame {
         
 
     }//GEN-LAST:event_btnGuardarActionPerformed
-    
-    /*void cargar(String valor) throws SQLException {
-        String[] titulos = {"codigo,descrip,cantidad"};
-        String[] registros = new String[3];
+   /* 
+    void cargar(String codcli) throws SQLException {
+        String[] clientes = {"codcli,cedcli,nomcli,telcli,celcli,dircli,emacli,notcli,tipocf,codcon,codmon,codempven,estado"};
+        String[] registros = new String[13];
 
-        String sql = "SELECT * FROM clientes WHERE codcli,' ',descrip  LIKE '%" + valor + "%'";
+        String sql = "SELECT * FROM clientes WHERE codcli,' ',cedcli,'',nomcli,'',telcli,'',celcli,'',dircli'',emacli,'',notcli,'',tipocf,'',codcon,'',codmon,'',codempven,'',estado,''  LIKE '%" + valor + "%'";
 
-        busca = new DefaultTableModel(null, titulos);
+        busca = new DefaultTableModel(null, clientes);
         conectar db = new conectar();
         Connection cn = db.conexion();
 
@@ -452,7 +468,7 @@ public class mantClientes extends javax.swing.JFrame {
         try {
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                registros[0] = rs.getString("{codigo");
+                registros[0] = rs.getString("{codcli");
 
                 busca.addColumn(registros);
                 Datos.setModel(busca);
