@@ -137,7 +137,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
         jMenuItem1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         jMenuItem1.setText("Salir");
-        jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jMenuItem1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -156,6 +156,11 @@ public class MenuPrincipal extends javax.swing.JFrame {
         });
 
         jMenuItem2.setText("Mantenimiento de clientes");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem2);
 
         jMenuItem3.setText("Mantenimiento de unidades");
@@ -285,6 +290,12 @@ public class MenuPrincipal extends javax.swing.JFrame {
         ajusteInventario inventario = new ajusteInventario();
         inventario.setVisible(true);
     }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        mantClientes Info = new mantClientes();
+        Info.setVisible(true);
+        Info.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
